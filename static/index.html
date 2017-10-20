@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESNManager Search</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+            integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+            crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/5c2492251a.js"></script>
+</head>
+<body>
+
+
+
+<div class="container mainContainer">
+    <div class="logo">
+        <img src="images/logo.png" alt="">
+    </div>
+
+    <form action="" METHOD="post" id="searchForm">
+        <div class="searchIcon">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="text" id="myInput" name="itemBySearch"  placeholder="Search.." required>
+            <div class="buttons">
+                <button type="button" id="pallet" class="btn btn-primary">Pallet No</button>
+                <button type="button" id="upc" class="btn btn-success">UPC Code</button>
+
+            </div>
+
+        </div>
+    </form>
+
+
+
+    <table id="myTable" class="table">
+        <thead>
+        <tr>
+            <th>UPC</th>
+            <th>Origin</th>
+            <th>List Name</th>
+            <th>Pallet No</th>
+            <th># Per Item</th>
+        </tr>
+        </thead>
+        <tbody id="tbodyData">
+
+
+        </tbody>
+    </table>
+
+
+</div>
+
+
+
+<script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+
+
+<script>
+
+    $(document).ready(function(){
+
+
+
+        $("#upc").click(function(){
+
+            var data = $('#searchForm').serialize();
+
+            $.ajax({
+
+                url: '/upc',
+                method:'POST',
+                data: data,
+                success: function(result){
+
+
+                    if($("#tbodyData").children().length > 0){
+                        $("#tbodyData").empty();
+                    }
+
+
+                    for(var i = 0; i < result.recordset.length ; i++){
+
+                        var upc = result.recordset[i]["Upc"] !== null ? result.recordset[i]["Upc"] : "N/E" ;
+                        var scanDate = result.recordset[i]['ScanDate'] !== null ? result.recordset[i]["ScanDates"] : "N/E" ;
+                        var listName = result.recordset[i]['ListName'] !== null ? result.recordset[i]["ListName"] : "N/E" ;
+                        var palletNo = result.recordset[i]['PalletNo'] !== null ? result.recordset[i]["PalletNo"] : "N/E" ;
+                        var perItem = result.recordset[i]['#PerItem'] !== null ? result.recordset[i]["#PerItem"] : "N/E" ;
+
+
+                        var  htmlResult = "<tr><th scope='row'>" + upc + "</th><td>"+scanDate+"</td>" +
+                            "<td>"+listName+"</td><td>"+palletNo+"</td><td>"+perItem+"</td></tr>"
+
+                        $("#tbodyData").append(htmlResult);
+
+                    }
+
+
+
+                }
+
+            })
+
+        });
+
+
+        $("#pallet").click(function(){
+
+            var data = $('#searchForm').serialize();
+
+            $.ajax({
+
+                url: '/palletno',
+                method:'POST',
+                data: data,
+                success: function(result){
+
+
+                    if($("#tbodyData").children().length > 0){
+                        $("#tbodyData").empty();
+                    }
+
+
+                    for(var i = 0; i < result.recordset.length ; i++){
+
+                        var upc = result.recordset[i]["Upc"] !== null ? result.recordset[i]["Upc"] : "N/E" ;
+                        var scanDate = result.recordset[i]['ScanDate'] !== null ? result.recordset[i]["ScanDate"] : "N/E" ;
+                        var listName = result.recordset[i]['ListName'] !== null ? result.recordset[i]["ListName"] : "N/E" ;
+                        var palletNo = result.recordset[i]['PalletNo'] !== null ? result.recordset[i]["PalletNo"] : "N/E" ;
+                        var perItem = result.recordset[i]['#PerItem'] !== null ? result.recordset[i]["#PerItem"] : "N/E" ;
+
+
+                        var  htmlResult = "<tr><th scope='row'>" + upc + "</th><td>"+scanDate+"</td>" +
+                            "<td>"+listName+"</td><td>"+palletNo+"</td><td>"+perItem+"</td></tr>"
+
+                        $("#tbodyData").append(htmlResult);
+
+                    }
+
+
+
+                }
+
+            })
+
+        });
+
+    });
+
+
+
+//    function myFunction() {
+//        // Declare variables
+//        var input, filter, table, tr, td, i;
+//        input = document.getElementById("myInput");
+//        filter = input.value.toUpperCase();
+//        table = document.getElementById("myTable");
+//        tr = table.getElementsByTagName("tr");
+//
+//        // Loop through all table rows, and hide those who don't match the search query
+//        for (i = 0; i < tr.length; i++) {
+//            td = tr[i].getElementsByTagName("td")[0];
+//            if (td) {
+//                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+//                    tr[i].style.display = "";
+//                } else {
+//                    tr[i].style.display = "none";
+//                }
+//            }
+//        }
+//    }
+</script>
+</body>
+</html>
